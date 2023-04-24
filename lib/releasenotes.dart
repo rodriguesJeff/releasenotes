@@ -16,7 +16,7 @@ class ReleaseNotes {
     required this.appBundleId,
   });
 
-  Future<String> getReleaseNotes(String lang, String country) async {
+  Future<String?> getReleaseNotes(String lang, String country) async {
     final playStoreSearch = PlayStoreSearchAPI();
     final itunesSoreSearch = ITunesSearchAPI();
     String? result;
@@ -46,10 +46,7 @@ class ReleaseNotes {
       );
       result = ITunesResults.releaseNotes(storeInfos!);
     }
-    if (result != null) {
-      return result;
-    } else {
-      return "Problem with version update checker";
-    }
+
+    return result;
   }
 }
