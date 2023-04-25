@@ -51,7 +51,7 @@ class ITunesSearchAPI {
     final url =
         lookupURLById(id, country: country, useCacheBuster: useCacheBuster)!;
     if (debugEnabled) {
-      debugPrint('$url');
+      debugPrint(url);
     }
     try {
       final response = await client!.get(Uri.parse(url));
