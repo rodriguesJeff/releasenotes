@@ -12,8 +12,6 @@ dependencies:
     sdk: flutter
   html: ^0.15.2
   http: ^0.13.5
-  mockito: ^5.4.0
-  mocktail: ^0.3.0
 
 dev_dependencies:
   flutter_test:
