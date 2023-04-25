@@ -1,6 +1,6 @@
 name: releasenotes
 description: A Flutter package to provide the Release Notes of store for your app.
-version: 0.0.1
+version: 0.0.2
 homepage: https://github.com/rodriguesJeff/releasenotes
 
 environment:
