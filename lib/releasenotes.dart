@@ -3,6 +3,7 @@ library releasenotes;
 import 'dart:io';
 
 import 'package:releasenotes/itunes_search_api.dart';
+import 'package:releasenotes/models/release_notes_model.dart';
 import 'package:releasenotes/play_store_search_api.dart';
 import 'package:releasenotes/update_checker.dart';
 import 'package:releasenotes/update_checker_result.dart';
@@ -16,10 +17,13 @@ class ReleaseNotes {
     required this.appBundleId,
   });
 
-  Future<String?> getReleaseNotes(String lang, String country) async {
+  Future<ReleaseNotesModel?> getReleaseNotes(
+      String lang, String country) async {
     final playStoreSearch = PlayStoreSearchAPI();
     final itunesSoreSearch = ITunesSearchAPI();
     String? result;
+
+    late ReleaseNotesModel releaseNotes;
 
     // Get the last version of the store
     final UpdateCheckerResult updateCheckerResult =
@@ -47,6 +51,11 @@ class ReleaseNotes {
       result = ITunesResults.releaseNotes(storeInfos!);
     }
 
-    return result;
+    releaseNotes = ReleaseNotesModel(
+      notes: result,
+      version: updateCheckerResult.newVersion,
+    );
+
+    return releaseNotes;
   }
 }
