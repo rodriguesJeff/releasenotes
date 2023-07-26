@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:releasenotes/models/release_notes_model.dart';
 import 'package:releasenotes/releasenotes.dart';
 
 void main() {
@@ -6,14 +7,18 @@ void main() {
 
   setUp(() {
     releaseNotes = ReleaseNotes(
-        currentVersion: "0.0.1", appBundleId: "com.startcom.camporiImortais");
+      currentVersion: "0.0.1",
+      appBundleId: "com.startcom.camporiImortais",
+    );
   });
 
   test(
-    "Should return the app release notes",
+    "Should return an ReleaseNotesModel with the app version and notes",
     () async {
-      final notes = await releaseNotes.getReleaseNotes("pt", "BR");
-      expect(notes, isA<String>());
+      final ReleaseNotesModel? notes = await releaseNotes.getReleaseNotes("pt", "BR");
+      expect(notes, isA<ReleaseNotesModel>());
+      expect(notes?.version, isA<String?>());
+      expect(notes?.notes, isA<String?>());
     },
   );
 }
