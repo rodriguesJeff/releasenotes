@@ -8,17 +8,17 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: install dependencies
-        uses: steebchen/flutter@v1.1.0
+        uses: steebchen/flutter@v2.10.0
         with:
           args: pub get
 
       - name: analyse
-        uses: steebchen/flutter@v1.1.0
+        uses: steebchen/flutter@v2.10.0
         with:
           args: analyse
 
       - name: run tests
-        uses: steebchen/flutter@v1.1.0
+        uses: steebchen/flutter@v2.10.0
         with:
           args: test
 
