@@ -17,8 +17,7 @@ class ReleaseNotes {
     required this.appBundleId,
   });
 
-  Future<ReleaseNotesModel?> getReleaseNotes(
-      String lang, String country) async {
+  Future<ReleaseNotesModel?> getReleaseNotes(String lang, String country) async {
     final playStoreSearch = PlayStoreSearchAPI();
     final itunesSoreSearch = ITunesSearchAPI();
     String? result;
@@ -26,16 +25,16 @@ class ReleaseNotes {
     late ReleaseNotesModel releaseNotes;
 
     // Get the last version of the store
-    final UpdateCheckerResult updateCheckerResult =
-        await UpdateChecker().checkIfAppHasUpdates(
+    final UpdateCheckerResult updateCheckerResult = await UpdateChecker().checkIfAppHasUpdates(
       currentVersion: currentVersion,
       appBundleId: appBundleId,
       isAndroid: Platform.isAndroid,
     );
 
+    if (currentVersion == updateCheckerResult.newVersion) return null;
+
     // Get release notes from the store selected
-    if (currentVersion != updateCheckerResult.newVersion &&
-        !Platform.isAndroid) {
+    if (Platform.isAndroid) {
       final storeInfos = await playStoreSearch.lookupById(
         appBundleId,
         language: lang,
@@ -43,10 +42,9 @@ class ReleaseNotes {
       );
       result = PlayStoreResults.releaseNotes(storeInfos!);
     } else {
-      final Map<dynamic, dynamic>? storeInfos =
-          await itunesSoreSearch.lookupByBundleId(
+      final Map<dynamic, dynamic>? storeInfos = await itunesSoreSearch.lookupByBundleId(
         appBundleId,
-        country: "BR",
+        country: country,
       );
       result = ITunesResults.releaseNotes(storeInfos!);
     }
