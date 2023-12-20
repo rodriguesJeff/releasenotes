@@ -15,7 +15,7 @@ void main() {
   test(
     "Should return an ReleaseNotesModel with the app version and notes",
     () async {
-      final ReleaseNotesModel? notes = await releaseNotes.getReleaseNotes("pt", "BR");
+      final ReleaseNotesModel? notes = await releaseNotes.getReleaseNotes("pt", "BR", locale: "pt_BR");
       expect(notes, isA<ReleaseNotesModel>());
       expect(notes?.version, isA<String?>());
       expect(notes?.notes, isA<String?>());

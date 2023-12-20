@@ -15,17 +15,27 @@ class ReleaseNotes {
   ReleaseNotes({
     required this.currentVersion,
     required this.appBundleId,
-  });
+  })  : assert(currentVersion.isNotEmpty),
+        assert(appBundleId.isNotEmpty);
 
-  Future<ReleaseNotesModel?> getReleaseNotes(String lang, String country) async {
+  Future<ReleaseNotesModel?> getReleaseNotes(
+    String lang,
+    String country, {
+    String? locale,
+  }) async {
+    assert(lang.isNotEmpty && lang.trim().length == 2);
+    assert(country.isNotEmpty && country.trim().length == 2);
+    if (Platform.isIOS) {
+      assert(locale != null && locale.isNotEmpty && locale.length == 5);
+    }
+
     final playStoreSearch = PlayStoreSearchAPI();
     final itunesSoreSearch = ITunesSearchAPI();
     String? result;
 
-    late ReleaseNotesModel releaseNotes;
-
     // Get the last version of the store
-    final UpdateCheckerResult updateCheckerResult = await UpdateChecker().checkIfAppHasUpdates(
+    final UpdateCheckerResult updateCheckerResult =
+        await UpdateChecker().checkIfAppHasUpdates(
       currentVersion: currentVersion,
       appBundleId: appBundleId,
       isAndroid: Platform.isAndroid,
@@ -42,14 +52,16 @@ class ReleaseNotes {
       );
       result = PlayStoreResults.releaseNotes(storeInfos!);
     } else {
-      final Map<dynamic, dynamic>? storeInfos = await itunesSoreSearch.lookupByBundleId(
+      final Map<dynamic, dynamic>? storeInfos =
+          await itunesSoreSearch.lookupByBundleId(
         appBundleId,
         country: country,
+        locale: locale!,
       );
       result = ITunesResults.releaseNotes(storeInfos!);
     }
 
-    releaseNotes = ReleaseNotesModel(
+    final ReleaseNotesModel releaseNotes = ReleaseNotesModel(
       notes: result,
       version: updateCheckerResult.newVersion,
     );
