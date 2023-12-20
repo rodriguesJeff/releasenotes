@@ -56,7 +56,7 @@ class ReleaseNotes {
           await itunesSoreSearch.lookupByBundleId(
         appBundleId,
         country: country,
-        locale: locale ?? "en_US",
+        locale: locale!,
       );
       result = ITunesResults.releaseNotes(storeInfos!);
     }
