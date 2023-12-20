@@ -4,35 +4,38 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
 class ITunesSearchAPI {
-  final String iTunesDocumentationURL =
+  static const String kITunesDocumentationURL =
       'https://affiliate.itunes.apple.com/resources/documentation/itunes-store-web-service-search-api/';
 
-  final String lookupPrefixURL = 'https://itunes.apple.com/lookup';
+  static const String kLookupPrefixURL = 'https://itunes.apple.com/lookup';
 
-  final String searchPrefixURL = 'https://itunes.apple.com/search';
+  static const String kSearchPrefixURL = 'https://itunes.apple.com/search';
 
   http.Client? client = http.Client();
 
   bool debugEnabled = false;
 
-  Future<Map?> lookupByBundleId(String bundleId,
-      {String? country = 'US', bool useCacheBuster = true}) async {
+  Future<Map<dynamic, dynamic>?> lookupByBundleId(
+    String bundleId, {
+    required String country,
+    required String locale,
+    bool useCacheBuster = true,
+  }) async {
     assert(bundleId.isNotEmpty);
-    if (bundleId.isEmpty) {
-      return null;
-    }
+    if (bundleId.isEmpty) return null;
 
-    final url = lookupURLByBundleId(bundleId,
-        country: country ??= '', useCacheBuster: useCacheBuster)!;
-    if (debugEnabled) {
-      debugPrint(url);
-    }
+    final url = lookupURLByBundleId(
+          bundleId,
+          country: country,
+          locale: locale,
+          useCacheBuster: useCacheBuster,
+        ) ??
+        "";
+    if (debugEnabled) debugPrint(url);
 
     try {
       final response = await client!.get(Uri.parse(url));
-      if (debugEnabled) {
-        debugPrint('${response.statusCode}');
-      }
+      if (debugEnabled) debugPrint('${response.statusCode}');
 
       final decodedResults = _decodeResults(response.body);
       return decodedResults;
@@ -42,19 +45,24 @@ class ITunesSearchAPI {
     }
   }
 
-  Future<Map?> lookupById(String id,
-      {String country = 'US', bool useCacheBuster = true}) async {
-    if (id.isEmpty) {
-      return null;
-    }
+  Future<Map<dynamic, dynamic>?> lookupById(
+    String id, {
+    required String country,
+    required String locale,
+    bool useCacheBuster = true,
+  }) async {
+    if (id.isEmpty) return null;
 
-    final url =
-        lookupURLById(id, country: country, useCacheBuster: useCacheBuster)!;
-    if (debugEnabled) {
-      debugPrint(url);
-    }
+    final url = lookupURLById(
+      id,
+      country: country,
+      locale: locale,
+      useCacheBuster: useCacheBuster,
+    );
+    if (debugEnabled) debugPrint(url);
+
     try {
-      final response = await client!.get(Uri.parse(url));
+      final response = await client!.get(Uri.parse(url ?? ""));
       final decodedResults = _decodeResults(response.body);
       return decodedResults;
     } catch (e) {
@@ -63,33 +71,48 @@ class ITunesSearchAPI {
     }
   }
 
-  String? lookupURLByBundleId(String bundleId,
-      {String country = 'US', bool useCacheBuster = true}) {
+  String? lookupURLByBundleId(
+    String bundleId, {
+    required String country,
+    required String locale,
+    bool useCacheBuster = true,
+  }) {
     if (bundleId.isEmpty) {
       return null;
     }
 
-    return lookupURLByQSP(
-        {'bundleId': bundleId, 'country': country.toUpperCase()},
-        useCacheBuster: useCacheBuster);
+    final queryParams = <String, String?>{
+      'bundleId': bundleId,
+      'country': country.toUpperCase(),
+      'lang': locale.toLowerCase(),
+    };
+
+    return lookupURLByQSP(queryParams, useCacheBuster: useCacheBuster);
   }
 
-  String? lookupURLById(String id,
-      {String country = 'US', bool useCacheBuster = true}) {
-    if (id.isEmpty) {
-      return null;
-    }
+  String? lookupURLById(
+    String id, {
+    required String country,
+    required String locale,
+    bool useCacheBuster = true,
+  }) {
+    if (id.isEmpty) return null;
 
-    return lookupURLByQSP({'id': id, 'country': country.toUpperCase()},
-        useCacheBuster: useCacheBuster);
+    final queryParams = <String, String?>{
+      'id': id,
+      'country': country.toUpperCase(),
+      'lang': locale.toLowerCase(),
+    };
+
+    return lookupURLByQSP(queryParams, useCacheBuster: useCacheBuster);
   }
 
   /// Look up URL by QSP.
-  String? lookupURLByQSP(Map<String, String?> qsp,
-      {bool useCacheBuster = true}) {
-    if (qsp.isEmpty) {
-      return null;
-    }
+  String? lookupURLByQSP(
+    Map<String, String?> qsp, {
+    bool useCacheBuster = true,
+  }) {
+    if (qsp.isEmpty) return null;
 
     final parameters = <String>[];
     qsp.forEach((key, value) => parameters.add('$key=$value'));
@@ -98,10 +121,10 @@ class ITunesSearchAPI {
     }
     final finalParameters = parameters.join('&');
 
-    return '$lookupPrefixURL?$finalParameters';
+    return '$kLookupPrefixURL?$finalParameters';
   }
 
-  Map? _decodeResults(String jsonResponse) {
+  Map<dynamic, dynamic>? _decodeResults(String jsonResponse) {
     if (jsonResponse.isNotEmpty) {
       final decodedResults = json.decode(jsonResponse);
       if (decodedResults is Map) {
@@ -119,20 +142,20 @@ class ITunesSearchAPI {
 }
 
 class ITunesResults {
-  static String? description(Map response) {
+  static String? description(Map<dynamic, dynamic> response) {
     String? value;
     try {
-      value = response['results'][0]['description'];
+      value = response['results'][0]['description'] as String?;
     } catch (e) {
       debugPrint('$e');
     }
     return value;
   }
 
-  static String? releaseNotes(Map response) {
+  static String? releaseNotes(Map<dynamic, dynamic> response) {
     String? value;
     try {
-      value = response['results'][0]['releaseNotes'];
+      value = response['results'][0]['releaseNotes'] as String?;
     } catch (e) {
       debugPrint('$e');
     }
