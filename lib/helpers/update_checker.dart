@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:http/http.dart' as http;
 import 'package:releasenotes/models/update_checker_result.dart';
@@ -7,9 +8,8 @@ class UpdateChecker {
   Future<UpdateCheckerResult> checkIfAppHasUpdates({
     required String currentVersion,
     required String appBundleId,
-    required bool isAndroid,
   }) async {
-    if (isAndroid) {
+    if (Platform.isAndroid) {
       return await checkPlayStoreUpdate(currentVersion, appBundleId);
     } else {
       return await checkAppStoreUpdate(currentVersion, appBundleId);

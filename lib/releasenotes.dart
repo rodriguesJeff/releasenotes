@@ -41,7 +41,6 @@ class ReleaseNotes {
           await UpdateChecker().checkIfAppHasUpdates(
         currentVersion: currentVersion,
         appBundleId: appBundleId,
-        isAndroid: Platform.isAndroid,
       );
 
       // Get release notes from the store selected

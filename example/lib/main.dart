@@ -30,8 +30,13 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  static const String kBundleId = "vio.app";
-  static const String kCurrentVersion = "1.0.3";
+  static const String kBundleId = "com.startcom.camporiImortais";
+  static const String kCurrentVersion = "0.0.1";
+
+  final releaseNotes = ReleaseNotes(
+    appBundleId: kBundleId,
+    currentVersion: kCurrentVersion,
+  );
 
   String? notes;
   String? version;
@@ -40,11 +45,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   getReleaseNotes() async {
     setState(() => isLoading = true);
-    final releaseNotes = ReleaseNotes(
-      appBundleId: kBundleId,
-      currentVersion: kCurrentVersion,
-    );
-    print(releaseNotes.currentVersion);
+
     final ReleaseNotesModel? releaseNotesModel =
         await releaseNotes.getReleaseNotes("vi", "VN", locale: "vi_VN");
     setState(() {

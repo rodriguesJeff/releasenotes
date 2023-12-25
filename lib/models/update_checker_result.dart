@@ -33,17 +33,14 @@ extension on UpdateCheckerResult {
 
     final int versionASize = versionNumbersA.length;
     final int versionBSize = versionNumbersB.length;
-    int maxSize = math.max(versionASize, versionBSize);
+    final maxSize = math.max(versionASize, versionBSize);
 
     for (int i = 0; i < maxSize; i++) {
-      print("loop: i = $i");
-      if ((i < versionASize ? versionNumbersA[i] : 0) >
-          (i < versionBSize ? versionNumbersB[i] : 0)) {
-        return false;
-      } else if ((i < versionASize ? versionNumbersA[i] : 0) <
-          (i < versionBSize ? versionNumbersB[i] : 0)) {
-        return true;
-      }
+      final firstComparableValue = i < versionASize ? versionNumbersA[i] : 0;
+      final secondComparableValue = i < versionBSize ? versionNumbersB[i] : 0;
+
+      if (firstComparableValue > secondComparableValue) return false;
+      if (firstComparableValue < secondComparableValue) return true;
     }
     return false;
   }
