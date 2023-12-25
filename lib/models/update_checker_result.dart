@@ -13,10 +13,19 @@ class UpdateCheckerResult {
     this.errorMessage,
   );
 
-  bool get canUpdate =>
-      _shouldUpdate(currentVersion, (newVersion ?? currentVersion));
+  bool get canUpdate => shouldUpdate;
 
-  bool _shouldUpdate(String versionA, String versionB) {
+  @override
+  String toString() {
+    return "Current Version: $currentVersion\nNew Version: $newVersion\nApp URL: $appURL\ncan update: $canUpdate\nerror: $errorMessage";
+  }
+}
+
+extension on UpdateCheckerResult {
+  bool get shouldUpdate {
+    final versionA = currentVersion;
+    final versionB = newVersion ?? currentVersion;
+
     final versionNumbersA =
         versionA.split(".").map((e) => int.tryParse(e) ?? 0).toList();
     final versionNumbersB =
@@ -27,6 +36,7 @@ class UpdateCheckerResult {
     int maxSize = math.max(versionASize, versionBSize);
 
     for (int i = 0; i < maxSize; i++) {
+      print("loop: i = $i");
       if ((i < versionASize ? versionNumbersA[i] : 0) >
           (i < versionBSize ? versionNumbersB[i] : 0)) {
         return false;
@@ -36,10 +46,5 @@ class UpdateCheckerResult {
       }
     }
     return false;
-  }
-
-  @override
-  String toString() {
-    return "Current Version: $currentVersion\nNew Version: $newVersion\nApp URL: $appURL\ncan update: $canUpdate\nerror: $errorMessage";
   }
 }

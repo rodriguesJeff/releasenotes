@@ -35,7 +35,8 @@ Future<ReleaseNotesModel?> getReleaseNotes() async {
 }
 ````
 
-The value can be null cause if the app is up to date you don't show the page, modal or some other widget that your preference.
+If current version == store version => the property isLatest = true. It indicates that the current version of the app is matched with the version on the store.
+The value be null once error.
 
 After that you can configure how you prefer what will happen with the information you have received.
 

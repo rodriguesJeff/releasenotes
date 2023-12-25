@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-import 'package:releasenotes/update_checker_result.dart';
+import 'package:releasenotes/models/update_checker_result.dart';
 
 class UpdateChecker {
   Future<UpdateCheckerResult> checkIfAppHasUpdates({
@@ -9,21 +9,23 @@ class UpdateChecker {
     required String appBundleId,
     required bool isAndroid,
   }) async {
-    final currentVersion0 = currentVersion;
-    final packageName = appBundleId;
     if (isAndroid) {
-      return await _checkUpdatesOnPlayStore(currentVersion0, packageName);
+      return await checkPlayStoreUpdate(currentVersion, appBundleId);
     } else {
-      return await _checkUpdatesInAppStore(currentVersion0, packageName);
+      return await checkAppStoreUpdate(currentVersion, appBundleId);
     }
   }
+}
 
-  Future<UpdateCheckerResult> _checkUpdatesInAppStore(
-      String currentVersion, String packageName) async {
+extension on UpdateChecker {
+  Future<UpdateCheckerResult> checkAppStoreUpdate(
+    String currentVersion,
+    String packageName,
+  ) async {
     String? errorMsg;
     String? newVersion;
     String? url;
-    var uri =
+    final uri =
         Uri.https("itunes.apple.com", "/lookup", {"bundleId": packageName});
     try {
       final response = await http.get(uri);
@@ -52,8 +54,10 @@ class UpdateChecker {
     );
   }
 
-  Future<UpdateCheckerResult> _checkUpdatesOnPlayStore(
-      String currentVersion, String packageName) async {
+  Future<UpdateCheckerResult> checkPlayStoreUpdate(
+    String currentVersion,
+    String packageName,
+  ) async {
     String? errorMsg;
     String? newVersion;
     String? url;
