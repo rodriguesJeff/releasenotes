@@ -31,7 +31,11 @@ After that, you only need to call the `getReleaseNotes` function passing languag
 
 ````dart
 Future<ReleaseNotesModel?> getReleaseNotes() async {
-  return await releaseNotes.getReleaseNotes("pt", "BR");
+  return await releaseNotes.getReleaseNotes(
+    "pt",
+    "BR",
+    locale: "pt_BR", // For iOS, this property is must have to get release notes localized
+  );
 }
 ````
 
