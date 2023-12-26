@@ -1,4 +1,5 @@
 ## 1.0.5
+* Thanks to @honghai2196 for contributing
 * Added bool isLatest, indicates whether the current version is latest compared with the one on Play Store/App Store
 * When current version >= store version, isLatest = true instead of null result. Otherwise, isLatest = false
 
