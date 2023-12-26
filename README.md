@@ -31,11 +31,16 @@ After that, you only need to call the `getReleaseNotes` function passing languag
 
 ````dart
 Future<ReleaseNotesModel?> getReleaseNotes() async {
-  return await releaseNotes.getReleaseNotes("pt", "BR");
+  return await releaseNotes.getReleaseNotes(
+    "pt",
+    "BR",
+    locale: "pt_BR", // For iOS, this property is must have to get release notes localized
+  );
 }
 ````
 
-The value can be null cause if the app is up to date you don't show the page, modal or some other widget that your preference.
+If current version == store version => the property isLatest = true. It indicates that the current version of the app is matched with the version on the store.
+The value be null once error.
 
 After that you can configure how you prefer what will happen with the information you have received.
 
