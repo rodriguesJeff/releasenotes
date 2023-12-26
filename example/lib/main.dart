@@ -30,22 +30,28 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  static const String kBundleId = "com.startcom.camporiImortais";
+  static const String kCurrentVersion = "0.0.1";
+
   final releaseNotes = ReleaseNotes(
-    appBundleId: "com.startcom.camporiImortais",
-    currentVersion: "0.0.1",
+    appBundleId: kBundleId,
+    currentVersion: kCurrentVersion,
   );
 
   String? notes;
   String? version;
+  bool? isLatest;
   bool isLoading = false;
 
   getReleaseNotes() async {
     setState(() => isLoading = true);
+
     final ReleaseNotesModel? releaseNotesModel =
-        await releaseNotes.getReleaseNotes("pt", "BR");
+        await releaseNotes.getReleaseNotes("vi", "VN", locale: "vi_VN");
     setState(() {
       notes = releaseNotesModel?.notes ?? "Without notes";
       version = releaseNotesModel?.version ?? "No version find";
+      isLatest = releaseNotesModel?.isLatestVersion ?? false;
       isLoading = false;
     });
   }
@@ -69,8 +75,10 @@ class _MyHomePageState extends State<MyHomePage> {
             : Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text("$notes"),
-                  Text("$version"),
+                  const Text("current version: $kCurrentVersion"),
+                  Text("store release notes: $notes"),
+                  Text("store version: $version"),
+                  Text("isLatest: $isLatest"),
                 ],
               ),
       ),
