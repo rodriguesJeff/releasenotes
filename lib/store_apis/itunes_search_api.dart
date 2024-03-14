@@ -127,7 +127,7 @@ class ITunesSearchAPI {
 
     final decodedResults = json.decode(jsonResponse);
     if (decodedResults is! Map) return null;
-    final resultCount = int.tryParse(decodedResults['resultCount'] ?? "") ?? 0;
+    final resultCount = decodedResults['resultCount'];
     if (resultCount == 0) {
       if (debugEnabled) {
         debugPrint('$decodedResults');
