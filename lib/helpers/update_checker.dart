@@ -11,9 +11,8 @@ class UpdateChecker {
   }) async {
     if (Platform.isAndroid) {
       return await checkPlayStoreUpdate(currentVersion, appBundleId);
-    } else {
-      return await checkAppStoreUpdate(currentVersion, appBundleId);
     }
+    return await checkAppStoreUpdate(currentVersion, appBundleId);
   }
 }
 
@@ -46,12 +45,7 @@ extension on UpdateChecker {
     } catch (e) {
       errorMsg = "$e";
     }
-    return UpdateCheckerResult(
-      currentVersion,
-      newVersion,
-      url,
-      errorMsg,
-    );
+    return UpdateCheckerResult(currentVersion, newVersion, url, errorMsg);
   }
 
   Future<UpdateCheckerResult> checkPlayStoreUpdate(
@@ -80,11 +74,6 @@ extension on UpdateChecker {
     } catch (e) {
       errorMsg = "$e";
     }
-    return UpdateCheckerResult(
-      currentVersion,
-      newVersion,
-      url,
-      errorMsg,
-    );
+    return UpdateCheckerResult(currentVersion, newVersion, url, errorMsg);
   }
 }
