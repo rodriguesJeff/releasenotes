@@ -32,8 +32,6 @@ class ReleaseNotes {
     }
 
     try {
-      final playStoreSearch = PlayStoreSearchAPI();
-      final itunesSoreSearch = ITunesSearchAPI();
       String? result;
 
       // Get the last version of the store
@@ -45,20 +43,24 @@ class ReleaseNotes {
 
       // Get release notes from the store selected
       if (Platform.isAndroid) {
+        final playStoreSearch = PlayStoreSearchAPI();
         final storeInfos = await playStoreSearch.lookupById(
           appBundleId,
           language: lang,
           country: country,
         );
-        result = PlayStoreResults.releaseNotes(storeInfos!);
+        if (storeInfos == null) return null;
+        result = PlayStoreResults.releaseNotes(storeInfos);
       } else {
+        final itunesSoreSearch = ITunesSearchAPI();
         final Map<dynamic, dynamic>? storeInfos =
             await itunesSoreSearch.lookupByBundleId(
           appBundleId,
           country: country,
           locale: locale!,
         );
-        result = ITunesResults.releaseNotes(storeInfos!);
+        if (storeInfos == null) return null;
+        result = ITunesResults.releaseNotes(storeInfos);
       }
 
       final ReleaseNotesModel releaseNotes = ReleaseNotesModel(
@@ -69,7 +71,7 @@ class ReleaseNotes {
 
       return releaseNotes;
     } catch (e) {
-      rethrow;
+      return null;
     }
   }
 }

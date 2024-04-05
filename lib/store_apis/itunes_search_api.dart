@@ -11,7 +11,7 @@ class ITunesSearchAPI {
 
   static const String kSearchPrefixURL = 'https://itunes.apple.com/search';
 
-  http.Client? client = http.Client();
+  final client = http.Client();
 
   bool debugEnabled = false;
 
@@ -34,7 +34,7 @@ class ITunesSearchAPI {
     if (debugEnabled) debugPrint(url);
 
     try {
-      final response = await client!.get(Uri.parse(url));
+      final response = await client.get(Uri.parse(url));
       if (debugEnabled) debugPrint('${response.statusCode}');
 
       final decodedResults = _decodeResults(response.body);
@@ -62,7 +62,7 @@ class ITunesSearchAPI {
     if (debugEnabled) debugPrint(url);
 
     try {
-      final response = await client!.get(Uri.parse(url ?? ""));
+      final response = await client.get(Uri.parse(url ?? ""));
       final decodedResults = _decodeResults(response.body);
       return decodedResults;
     } catch (e) {
@@ -77,11 +77,9 @@ class ITunesSearchAPI {
     required String locale,
     bool useCacheBuster = true,
   }) {
-    if (bundleId.isEmpty) {
-      return null;
-    }
+    if (bundleId.isEmpty) return null;
 
-    final queryParams = <String, String?>{
+    final queryParams = <String, String>{
       'bundleId': bundleId,
       'country': country.toUpperCase(),
       'lang': locale.toLowerCase(),
@@ -98,7 +96,7 @@ class ITunesSearchAPI {
   }) {
     if (id.isEmpty) return null;
 
-    final queryParams = <String, String?>{
+    final queryParams = <String, String>{
       'id': id,
       'country': country.toUpperCase(),
       'lang': locale.toLowerCase(),
@@ -125,19 +123,17 @@ class ITunesSearchAPI {
   }
 
   Map<dynamic, dynamic>? _decodeResults(String jsonResponse) {
-    if (jsonResponse.isNotEmpty) {
-      final decodedResults = json.decode(jsonResponse);
-      if (decodedResults is Map) {
-        final resultCount = decodedResults['resultCount'];
-        if (resultCount == 0) {
-          if (debugEnabled) {
-            debugPrint('$decodedResults');
-          }
-        }
-        return decodedResults;
+    if (jsonResponse.isEmpty) return null;
+
+    final decodedResults = json.decode(jsonResponse);
+    if (decodedResults is! Map) return null;
+    final resultCount = decodedResults['resultCount'];
+    if (resultCount == 0) {
+      if (debugEnabled) {
+        debugPrint('$decodedResults');
       }
     }
-    return null;
+    return decodedResults;
   }
 }
 
